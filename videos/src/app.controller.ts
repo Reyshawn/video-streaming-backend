@@ -1,7 +1,9 @@
-import { Controller, Get, Param, Res, Headers, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Param, Res, Headers, HttpStatus, NotFoundException } from '@nestjs/common';
 import { AppService } from './app.service';
 import type { Response } from 'express';
 import { statSync, createReadStream } from 'fs';
+import { IncomingHttpHeaders } from 'http';
+
 
 @Controller()
 export class AppController {
@@ -13,11 +15,13 @@ export class AppController {
   }
 
   @Get('stream/:id')
-  async getStreamVideo(@Param('id') id: string, @Headers() headers, @Res() res: Response) {
-    const videoPath = `assets/${id}.mp4`;
-    const { size } = statSync(videoPath);
-    const videoRange = headers.range;
-
+  async getStreamVideo(@Param('id') id: any, @Headers() headers: IncomingHttpHeaders, @Res() res: Response) {
+    const videoPath = `assets/${id}.mp4`
+    const { size } = statSync(videoPath)
+    const videoRange = headers.range
+    if (!videoRange) {
+     throw new NotFoundException()
+    }
     const CHUNK_SIZE = 10 ** 6 // 1MB
 
     const parts = videoRange.replace(/bytes=/, "").split("-")
