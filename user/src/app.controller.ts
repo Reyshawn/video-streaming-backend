@@ -10,4 +10,9 @@ export class AppController {
   getGreetingMessage(name: string): string {
     return `Hello ${name}`;
   }
+
+  @MessagePattern({cmd: 'findUser'})
+  findOne(name: string) {
+    return {name: 'kiki', password: '12345', username: 'asd'};
+  }
 }
