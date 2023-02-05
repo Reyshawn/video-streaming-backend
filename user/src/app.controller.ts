@@ -1,18 +1,23 @@
 import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
-import { MessagePattern } from '@nestjs/microservices';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @MessagePattern({cmd: 'greeting'})
-  getGreetingMessage(name: string): string {
-    return `Hello ${name}`;
+  @MessagePattern({cmd: 'findUser'})
+  findUser(username: string) {
+    return this.appService.findUser(username)
   }
 
-  @MessagePattern({cmd: 'findUser'})
-  findOne(name: string) {
-    return {name: 'kiki', password: '12345', username: 'asd'};
+
+  @MessagePattern({cmd: 'createUser'})
+  createUser(@Payload() payload) {
+    try {
+      return this.appService.createUser(payload.username, payload.password)
+    } catch (err) {
+      throw err
+    }
   }
 }
