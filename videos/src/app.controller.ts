@@ -41,4 +41,9 @@ export class AppController {
     res.writeHead(HttpStatus.PARTIAL_CONTENT, h) //206
     readStreamfile.pipe(res)
   }
+
+  @Get('users')
+  getUsers() {
+    return this.appService.getUser()
+  }
 }
