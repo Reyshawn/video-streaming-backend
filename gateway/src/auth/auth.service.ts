@@ -1,25 +1,20 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
-import { RegisterDTO } from 'src/dto/register.dto';
+import { RegisterDTO, LoginDTO } from 'src/dto';
 import { hash } from 'src/utils';
-
-
-
-export type User = {
-  id: number;
-  name: string;
-  username: string;
-  password: string;
-}
 
 
 @Injectable()
 export class AuthService {
-  constructor(@Inject('USER_SERVICE') private userService: ClientProxy){}
+  constructor(
+    @Inject('USER_SERVICE') private userService: ClientProxy,
+    private jwtSevice: JwtService
+  ){}
 
   async validateUser(username: string, password: string): Promise<any> {    
-    const userObservable = this.userService.send<User, string>({cmd: 'findUser'}, username)
+    const userObservable = this.userService.send<LoginDTO, string>({cmd: 'findUser'}, username)
 
     const user = await firstValueFrom(userObservable)
 
@@ -31,13 +26,13 @@ export class AuthService {
     return null
   }
 
-  // async login(user: any) {
-  //   const payload = { name: user.name, sub: user.id }
-// 
-  //   return {
-  //     access_token: this.jwtSevice.sign(payload)
-  //   }
-  // }
+  async login(user: LoginDTO) {
+    const payload = { name: user.username, sub: user.id }
+
+    return {
+      access_token: this.jwtSevice.sign(payload)
+    }
+  }
 
   async register(payload: RegisterDTO) {
    try {

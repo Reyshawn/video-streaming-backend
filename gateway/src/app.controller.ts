@@ -2,7 +2,7 @@ import { Body, Controller, Get, Post, Request, UseGuards } from '@nestjs/common'
 import { AppService } from './app.service';
 import { AuthService } from './auth/auth.service';
 import { LocalAuthGuard } from './auth/local-auth.guard';
-import { RegisterDTO } from './dto/register.dto';
+import { RegisterDTO } from './dto';
 
 @Controller()
 export class AppController {
@@ -16,13 +16,11 @@ export class AppController {
     return this.appService.getHello();
   }
 
-
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  login(@Request() req): any {
-    return {msg: 'logged in'}
+  login(@Body() body): any {
+    return this.authService.login(body)
   }
-
 
   @Post('register')
   register(@Body() body: RegisterDTO) {
