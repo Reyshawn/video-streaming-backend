@@ -1,10 +1,14 @@
 import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
 import { MessagePattern, Payload } from '@nestjs/microservices';
+import { VideoService } from './video.service';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(
+    private readonly appService: AppService,
+    private readonly videoService: VideoService,
+  ) {}
 
   @MessagePattern({cmd: 'findUser'})
   findUser(username: string) {
@@ -19,5 +23,10 @@ export class AppController {
     } catch (err) {
       throw err
     }
+  }
+
+  @MessagePattern({cmd: 'uploadVideo'})
+  uploadVideo(@Payload() payload) {
+    return this.videoService.createVideo(payload)
   }
 }

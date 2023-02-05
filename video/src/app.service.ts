@@ -1,15 +1,16 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
+import { CreateVideoDTO } from './dto';
 
 @Injectable()
 export class AppService {
-  constructor(@Inject('USER_SERVICE') private client: ClientProxy){}
+  constructor(@Inject('USER_SERVICE') private userService: ClientProxy){}
 
   getHello(): string {
     return 'Hello World! video streaming';
   }
 
-  getUser() {
-    return this.client.send({cmd: 'greeting'}, 'lalala')
+  createVideo(payload: CreateVideoDTO) {
+    return this.userService.send({cmd: 'uploadVideo'}, payload)
   }
 }

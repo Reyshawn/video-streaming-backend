@@ -13,7 +13,7 @@ export class Video {
   mimetype: string
 
   @Column()
-  length: number
+  size: number
 
   @ManyToOne(type => User, user => user.videos)
   owner: User

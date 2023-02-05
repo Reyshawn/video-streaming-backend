@@ -48,5 +48,13 @@ export class AppController {
     const name = file.originalname
     const dest = `assets/${name}`
     writeFile(dest, file.buffer, () => {})
+
+    return this.appService.createVideo({
+      name: name,
+      mimetype: file.mimetype,
+      size: file.size,
+      userId: 5, // TODO
+      url: `this is url`, // TODO
+    })
   }
 }
