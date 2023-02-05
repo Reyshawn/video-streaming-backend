@@ -15,15 +15,12 @@ export class Video {
   @Column()
   length: number
 
-  @Column()
-  views: number
-
-  @Column()
-  likes: number
-
   @ManyToOne(type => User, user => user.videos)
   owner: User
 
   @Column()
   url: string
+
+  @Column()
+  notes: string
 }
