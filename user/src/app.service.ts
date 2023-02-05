@@ -25,7 +25,8 @@ export class AppService {
     const user = await this.usersRepository.findBy({ 
       username: username
     })
-    if (user != null) {
+
+    if (user.length > 0) {
       // TODO Unify exception
       return {message: 'the user has been existed'}
     }
