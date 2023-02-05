@@ -1,8 +1,9 @@
-import { Controller, Get, Param, Res, Headers, HttpStatus, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Param, Res, Headers, HttpStatus, NotFoundException, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { AppService } from './app.service';
 import type { Response } from 'express';
-import { statSync, createReadStream } from 'fs';
+import { statSync, createReadStream, writeFile } from 'fs';
 import { IncomingHttpHeaders } from 'http';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 
 @Controller()
@@ -15,7 +16,7 @@ export class AppController {
   }
 
   @Get('stream/:id')
-  async getStreamVideo(@Param('id') id: any, @Headers() headers: IncomingHttpHeaders, @Res() res: Response) {
+  async streamVideo(@Param('id') id: any, @Headers() headers: IncomingHttpHeaders, @Res() res: Response) {
     const videoPath = `assets/${id}.mp4`
     const { size } = statSync(videoPath)
     const videoRange = headers.range
@@ -37,13 +38,15 @@ export class AppController {
       'Content-Length': contentLength,
       'Content-Type': 'video/mp4'
     }
-
     res.writeHead(HttpStatus.PARTIAL_CONTENT, h) //206
     readStreamfile.pipe(res)
   }
 
-  @Get('users')
-  getUsers() {
-    return this.appService.getUser()
+  @Post('upload')
+  @UseInterceptors(FileInterceptor('file'))
+  uploadVideo(@UploadedFile() file: Express.Multer.File) {
+    const name = file.originalname
+    const dest = `assets/${name}`
+    writeFile(dest, file.buffer, () => {})
   }
 }

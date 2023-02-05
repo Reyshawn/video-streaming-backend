@@ -10,7 +10,7 @@ export class Video {
   name: string
 
   @Column()
-  extension: string
+  mimetype: string
 
   @Column()
   length: number
