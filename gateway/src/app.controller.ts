@@ -3,6 +3,7 @@ import { AppService } from './app.service';
 import { AuthService } from './auth/auth.service';
 import { LocalAuthGuard } from './auth/local-auth.guard';
 import { RegisterDTO } from './dto';
+import { JwtAuthGuard } from './auth/jwt-auth.guard';
 
 @Controller()
 export class AppController {
@@ -25,5 +26,11 @@ export class AppController {
   @Post('register')
   register(@Body() body: RegisterDTO) {
     return this.authService.register(body)
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('me')
+  getCurrentUserInfo(@Request() req: any) {
+    return this.appService.getCurrentUser(req.user.name)
   }
 }

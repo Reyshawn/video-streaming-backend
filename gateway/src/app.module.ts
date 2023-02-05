@@ -6,7 +6,17 @@ import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
-    AuthModule
+    AuthModule,
+    ClientsModule.register([
+      {
+        name: 'USER_SERVICE',
+        transport: Transport.TCP,
+        options : {
+          host: '127.0.0.1',
+          port: 8080
+        }
+      }
+    ])
   ],
   controllers: [AppController],
   providers: [AppService],
