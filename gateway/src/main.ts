@@ -8,8 +8,6 @@ import { ExtractJwt } from 'passport-jwt';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
-  app.enableCors()
-
   const service: JwtService = app.select(AuthModule).get(JwtService)
 
   app.use(
@@ -17,8 +15,13 @@ async function bootstrap() {
     createProxyMiddleware({
       target: "http://localhost:3001",
       changeOrigin: true,
-      pathRewrite: {'^/api/video' : '/'},
+      pathRewrite: {'^/api/video' : ''},
       onProxyReq: (proxyReq, req, res, options) => {
+        // ignore the stream calls from the video tag
+        if (req.path.startsWith('/stream') && req.headers.range != null) {
+          return
+        }
+        
         try {
           const token = ExtractJwt.fromAuthHeaderAsBearerToken()(req)
           const payload = service.verify(token)
