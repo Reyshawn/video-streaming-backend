@@ -11,8 +11,6 @@ export class VideoService {
   }
 
   async createVideo(payload)  {
-
-    console.log("payload:::", payload)
     const newVideo = this.videoRepository.create({
       name: payload.name,
       mimetype: payload.mimetype,

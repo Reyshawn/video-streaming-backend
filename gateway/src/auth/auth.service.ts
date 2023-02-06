@@ -26,11 +26,13 @@ export class AuthService {
     return null
   }
 
-  async login(user: LoginDTO) {
-    const payload = { name: user.username, sub: user.id }
+  async login(payload: LoginDTO) {   
+    const userObservable = this.userService.send<LoginDTO, string>({cmd: 'findUser'}, payload.username) 
+    const user = await firstValueFrom(userObservable)    
+    const p = { name: user.username, sub: user.id }
 
     return {
-      access_token: this.jwtSevice.sign(payload)
+      access_token: this.jwtSevice.sign(p)
     }
   }
 

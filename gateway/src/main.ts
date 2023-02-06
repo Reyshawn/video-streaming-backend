@@ -21,7 +21,8 @@ async function bootstrap() {
       onProxyReq: (proxyReq, req, res, options) => {
         try {
           const token = ExtractJwt.fromAuthHeaderAsBearerToken()(req)
-          service.verify(token)
+          const payload = service.verify(token)
+          proxyReq.setHeader('X-id', payload.sub)
         } catch (err) {
           res.status(403).json({ message: 'Unauthorized!' })
           return

@@ -44,17 +44,17 @@ export class AppController {
 
   @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
-  uploadVideo(@UploadedFile() file: Express.Multer.File) {
+  uploadVideo(@Headers() headers, @UploadedFile() file: Express.Multer.File) {
     const name = file.originalname
     const dest = `assets/${name}`
     writeFile(dest, file.buffer, () => {})
-
+    const userId = headers['x-id']
     return this.appService.createVideo({
       name: name,
       mimetype: file.mimetype,
       size: file.size,
-      userId: 5, // TODO
-      url: `this is url`, // TODO
+      userId: userId,
+      url: dest
     })
   }
 }
