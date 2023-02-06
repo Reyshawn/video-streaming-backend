@@ -33,4 +33,9 @@ export class AppController {
   getVideos() {
     return this.videoService.getVideos()
   }
+
+  @MessagePattern({cmd: 'findVideo'})
+  findVideo(id: number) {
+    return this.videoService.findVideo(id)
+  }
 }

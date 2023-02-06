@@ -13,4 +13,8 @@ export class AppService {
   createVideo(payload: CreateVideoDTO) {
     return this.userService.send({cmd: 'uploadVideo'}, payload)
   }
+
+  findVideo(id: number) {
+    return this.userService.send({cmd: 'findVideo'}, id)
+  }
 }

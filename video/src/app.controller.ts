@@ -4,6 +4,7 @@ import type { Response } from 'express';
 import { statSync, createReadStream, writeFile } from 'fs';
 import { IncomingHttpHeaders } from 'http';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { firstValueFrom } from 'rxjs';
 
 
 @Controller()
@@ -17,7 +18,10 @@ export class AppController {
 
   @Get('stream/:id')
   async streamVideo(@Param('id') id: any, @Headers() headers: IncomingHttpHeaders, @Res() res: Response) {
-    const videoPath = `assets/${id}.mp4`
+    const videoObservable = await this.appService.findVideo(id)
+    const video = await firstValueFrom(videoObservable)
+
+    const videoPath = video.url
     const { size } = statSync(videoPath)
     const videoRange = headers.range
     if (!videoRange) {

@@ -50,4 +50,10 @@ export class VideoService {
         return res
       })
   }
+
+  async findVideo(id: number) {
+    return this.videoRepository.findOneBy({
+      id
+    })
+  }
 }
