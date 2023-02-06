@@ -19,7 +19,7 @@ export class AppController {
   @MessagePattern({cmd: 'createUser'})
   createUser(@Payload() payload) {
     try {
-      return this.appService.createUser(payload.name, payload.username, payload.password)
+      return this.appService.createUser(payload.username, payload.password)
     } catch (err) {
       throw err
     }
