@@ -11,11 +11,11 @@ async function bootstrap() {
   const service: JwtService = app.select(AuthModule).get(JwtService)
 
   app.use(
-    '/api/video', 
+    '/s/video', 
     createProxyMiddleware({
       target: "http://localhost:3001",
       changeOrigin: true,
-      pathRewrite: {'^/api/video' : ''},
+      pathRewrite: {'^/s/video' : ''},
       onProxyReq: (proxyReq, req, res, options) => {
         // ignore the stream calls from the video tag
         if (req.path.startsWith('/stream') && req.headers.range != null) {
