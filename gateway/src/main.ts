@@ -15,7 +15,7 @@ async function bootstrap() {
   app.use(
     '/s/video', 
     createProxyMiddleware({
-      target: configService.get('VIDEO_SERVICE_URI'),
+      target: `http://${configService.get('VIDEO_SERVICE_HOST')}:${configService.get('VIDEO_SERVICE_PORT')}`,
       changeOrigin: true,
       pathRewrite: {'^/s/video' : ''},
       onProxyReq: (proxyReq, req, res, options) => {
