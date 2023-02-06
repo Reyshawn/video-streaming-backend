@@ -13,5 +13,5 @@ export class History {
   videoId: number
 
   @Column()
-  progress: number
+  progress: number // 0 - 1
 }

@@ -22,4 +22,8 @@ export class AppService {
   async getAllVideos() {
     return this.userService.send({cmd: 'getVideos'}, '')
   }
+
+  async updateHistory(payload) {
+    return this.userService.send({cmd: 'updateHistoryProgress'}, payload)
+  }
 }

@@ -2,12 +2,14 @@ import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { VideoService } from './video.service';
+import { HistoryService } from './history.service';
 
 @Controller()
 export class AppController {
   constructor(
     private readonly appService: AppService,
     private readonly videoService: VideoService,
+    private readonly historyService: HistoryService,
   ) {}
 
   @MessagePattern({cmd: 'findUser'})
@@ -37,5 +39,10 @@ export class AppController {
   @MessagePattern({cmd: 'findVideo'})
   findVideo(id: number) {
     return this.videoService.findVideo(id)
+  }
+
+  @MessagePattern({cmd: 'updateHistoryProgress'})
+  updateHistoryProgress(@Payload() payload) {
+    return this.historyService.updateProgress(payload)
   }
 }

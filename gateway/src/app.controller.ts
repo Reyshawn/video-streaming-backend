@@ -39,4 +39,10 @@ export class AppController {
   getAllVideos() {
     return this.appService.getAllVideos()
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('history')
+  updateHistory(@Body() body) {
+    return this.appService.updateHistory(body)
+  }
 }
