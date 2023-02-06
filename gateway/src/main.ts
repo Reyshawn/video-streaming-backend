@@ -36,6 +36,6 @@ async function bootstrap() {
     })
   )
 
-  await app.listen(configService.get('PORT'))
+  await app.listen(Number(process.env.PORT) || 3000)
 }
 bootstrap();

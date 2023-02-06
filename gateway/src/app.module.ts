@@ -23,7 +23,7 @@ import * as path from 'path'
             transport: Transport.TCP,
             options : {
               host: configService.get('USER_SERVICE_HOST'),
-              port: configService.get('USER_SERVICE_PORT')
+              port: Number(configService.get('USER_SERVICE_PORT'))
             }
           }
         },
