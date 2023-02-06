@@ -21,7 +21,7 @@ export class AppService {
     }
   }
 
-  async createUser(username: string, password: string)  {
+  async createUser(name: string = '', username: string, password: string)  {
     const user = await this.usersRepository.findBy({ 
       username: username
     })

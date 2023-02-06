@@ -40,7 +40,13 @@ export class AuthService {
    try {
       payload.password = hash(payload.password)
 
-      return this.userService.send<any, RegisterDTO>({cmd: 'createUser'}, payload)
+      const userObservable = this.userService.send<any, RegisterDTO>({cmd: 'createUser'}, payload)
+      const user = await firstValueFrom(userObservable) // TODO when the username has been existed.
+      const p =  { name: user.username, sub: user.id }
+      return {
+        access_token: this.jwtSevice.sign(p)
+      }
+
     } catch (err) {
       throw err
     }
