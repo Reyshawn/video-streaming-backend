@@ -4,16 +4,18 @@ import {createProxyMiddleware} from 'http-proxy-middleware';
 import { JwtService } from '@nestjs/jwt';
 import { AuthModule } from './auth/auth.module';
 import { ExtractJwt } from 'passport-jwt';
+import { ConfigService } from '@nestjs/config';
 
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
-  const service: JwtService = app.select(AuthModule).get(JwtService)
+  const jwtService: JwtService = app.select(AuthModule).get(JwtService)
+  const configService = app.get(ConfigService);
 
   app.use(
     '/s/video', 
     createProxyMiddleware({
-      target: "http://localhost:3001",
+      target: configService.get('VIDEO_SERVICE_URI'),
       changeOrigin: true,
       pathRewrite: {'^/s/video' : ''},
       onProxyReq: (proxyReq, req, res, options) => {
@@ -24,7 +26,7 @@ async function bootstrap() {
         
         try {
           const token = ExtractJwt.fromAuthHeaderAsBearerToken()(req)
-          const payload = service.verify(token)
+          const payload = jwtService.verify(token)
           proxyReq.setHeader('X-id', payload.sub)
         } catch (err) {
           res.status(403).json({ message: 'Unauthorized!' })
@@ -34,6 +36,6 @@ async function bootstrap() {
     })
   )
 
-  await app.listen(3000)
+  await app.listen(configService.get('PORT'))
 }
 bootstrap();
