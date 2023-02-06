@@ -4,10 +4,12 @@ import { AppService } from './app.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import * as path from 'path'
 
 @Module({
   imports: [
     ConfigModule.forRoot({
+      envFilePath: `${path.resolve(process.cwd(), '..')}/.${process.env.NODE_ENV}.env`,
       isGlobal: true
     }),
     AuthModule,
