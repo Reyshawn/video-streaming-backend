@@ -18,4 +18,8 @@ export class AppService {
 
     return rest
   }
+
+  async getAllVideos() {
+    return this.userService.send({cmd: 'getVideos'}, '')
+  }
 }

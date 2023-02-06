@@ -15,7 +15,6 @@ export class AppController {
     return this.appService.findUser(username)
   }
 
-
   @MessagePattern({cmd: 'createUser'})
   createUser(@Payload() payload) {
     try {
@@ -28,5 +27,10 @@ export class AppController {
   @MessagePattern({cmd: 'uploadVideo'})
   uploadVideo(@Payload() payload) {
     return this.videoService.createVideo(payload)
+  }
+
+  @MessagePattern({cmd: 'getVideos'})
+  getVideos() {
+    return this.videoService.getVideos()
   }
 }

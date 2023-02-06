@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Video } from './entities/video.entity';
-import { User } from './entities/user.entity';
 
 @Injectable()
 export class VideoService {
@@ -21,5 +20,34 @@ export class VideoService {
     })
 
     return this.videoRepository.save(newVideo)
+  }
+
+  async getVideos() {
+    this.videoRepository
+      .createQueryBuilder()
+      .select
+
+    return this.videoRepository
+      .find({
+        select: {
+          id: true,
+          name: true,
+          mimetype: true,
+          size: true,
+          notes: true
+        },
+        relations: {
+          owner: true
+        }
+      })
+      .then((res) => {
+        res.forEach(v => {
+          const {password, ...rest} = v.owner
+          // @ts-ignore
+          v.owner = rest
+        })
+
+        return res
+      })
   }
 }

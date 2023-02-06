@@ -33,4 +33,10 @@ export class AppController {
   getCurrentUserInfo(@Request() req: any) {
     return this.appService.getCurrentUser(req.user.name)
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('videos')
+  getAllVideos() {
+    return this.appService.getAllVideos()
+  }
 }
