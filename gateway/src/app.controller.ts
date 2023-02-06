@@ -35,9 +35,15 @@ export class AppController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('videos')
+  @Get('videos/all')
   getAllVideos() {
     return this.appService.getAllVideos()
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('videos/watched')
+  getWatchedVideos(@Request() req: any) {
+    return this.appService.getWatchedVideos(req.user.id)
   }
 
   @UseGuards(JwtAuthGuard)

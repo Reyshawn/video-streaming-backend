@@ -11,9 +11,10 @@ export class HistoryService {
 
   async createHistory(payload) {
     const newHistory = this.historyRepository.create({
-      userId: payload.userId,
-      videoId: payload.videoId,
-      progress: payload.progress
+      user: {id: payload.userId},
+      video: {id: payload.videoId},
+      progress: payload.progress,
+      hasWatched: payload.progress >= 0.98
     })
 
     return this.historyRepository.save(newHistory)
@@ -21,8 +22,8 @@ export class HistoryService {
 
   async updateProgress(payload) {
     const history = await this.historyRepository.findOneBy({
-      userId: payload.userId,
-      videoId: payload.videoId
+      user: {id: payload.userId},
+      video: {id: payload.videoId},
     })
 
     if (history == null) {
@@ -30,6 +31,25 @@ export class HistoryService {
     }
 
     history.progress = payload.progress
+    history.hasWatched = history.hasWatched || payload.progress >= 0.98
     return this.historyRepository.save(history)
+  }
+
+  async getWatchedVideos(id) {
+    return this.historyRepository.find({
+      where: {
+        user: {id: id},
+        hasWatched: true
+      },
+      relations: {
+        video: true
+      }
+    })
+    .then(res => {
+      return res.reduce((prev, curr) => {
+        prev.push(curr.video)
+        return prev
+      }, [])
+    })
   }
 }

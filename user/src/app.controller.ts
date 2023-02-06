@@ -45,4 +45,9 @@ export class AppController {
   updateHistoryProgress(@Payload() payload) {
     return this.historyService.updateProgress(payload)
   }
+
+  @MessagePattern({cmd: 'getWatchedVideos'})
+  getWatchedVideos(id: number) {
+    return this.historyService.getWatchedVideos(id)
+  }
 }

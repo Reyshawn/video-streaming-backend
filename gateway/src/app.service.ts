@@ -26,4 +26,8 @@ export class AppService {
   async updateHistory(payload) {
     return this.userService.send({cmd: 'updateHistoryProgress'}, payload)
   }
+
+  async getWatchedVideos(id) {
+    return this.userService.send({cmd: 'getWatchedVideos'}, id)
+  }
 }
