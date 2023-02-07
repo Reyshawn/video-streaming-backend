@@ -29,7 +29,7 @@ import * as path from 'path'
         },
         inject: [ConfigService]
       }
-    ])    
+    ])
   ],
   controllers: [AppController],
   providers: [AppService],

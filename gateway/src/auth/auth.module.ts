@@ -5,28 +5,47 @@ import { PassportModule } from '@nestjs/passport';
 import { LocalStrategy } from './local.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './jwt.strategy';
+import { ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
-    ClientsModule.register([
+    PassportModule,
+
+    ClientsModule.registerAsync([
       {
         name: 'USER_SERVICE',
-        transport: Transport.TCP,
-        options : {
-          host: '127.0.0.1',
-          port: 8080
-        }
+        useFactory: (configService: ConfigService) => {
+          return {
+            name: 'USER_SERVICE',
+            transport: Transport.TCP,
+            options : {
+              host: configService.get('USER_SERVICE_HOST'),
+              port: Number(configService.get('USER_SERVICE_PORT'))
+            }
+          }
+        },
+        inject: [ConfigService]
       }
     ]),
-    PassportModule,
-    JwtModule.register({
-      secret: 'secret',
-      signOptions: {
-        expiresIn: '30d'
-      }
+
+    JwtModule.registerAsync({
+      useFactory: (configService: ConfigService) => {
+        return {
+          secret: configService.get('JWT_SECRET'),
+          signOptions: {
+            expiresIn: configService.get('JWT_EXPIRES_IN')
+          }
+        }
+      },
+      inject: [ConfigService]
     })
   ],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
+  providers: [
+    ConfigService,
+    AuthService,
+    LocalStrategy,
+    JwtStrategy
+  ],
   exports: [AuthService]
 })
 export class AuthModule {}
