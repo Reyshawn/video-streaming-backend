@@ -9,3 +9,35 @@ services:
     environment:
       - NODE_ENV=production
     command: npm start
+
+  user:
+    build:
+      context: .
+      dockerfile: ./user/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - NODE_ENV=production
+    # depends_on:
+    #   - mysql
+    command: npm start 
+
+  video:
+    build:
+      context: .
+      dockerfile: ./video/Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+    command: npm start
+    volumes:
+      - ./video/assets:/app/assets
+
+  # mysql:
+  #   image: mysql:8.0
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: password123
+  #     MYSQL_DATABASE: video_streaming
+  #   ports:
+  #     - "3306:3306"
